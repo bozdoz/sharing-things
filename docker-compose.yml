@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+
+  web:
+    build: app
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - db:/data/db
+    ports:
+      - 27017:27017
+  
+volumes:
+  db:
