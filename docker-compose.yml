@@ -1,14 +1,15 @@
-version: "3.8"
+version: '3.8'
 
 services:
-
   web:
-    build: app
+    build: .
     restart: always
     ports:
       - 3000:3000
     depends_on:
       - mongo
+    environment: 
+      MONGODB_URI: mongodb://mongo:27017/pets
 
   mongo:
     image: mongo
@@ -17,6 +18,6 @@ services:
       - db:/data/db
     ports:
       - 27017:27017
-  
+
 volumes:
   db:
