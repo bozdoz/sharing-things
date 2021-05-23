@@ -1,10 +1,24 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { Socket } from "net";
+import { NextApiRequest, NextApiResponse } from "next";
 import { Server } from "socket.io";
 
-const socketIo = (req, res) => {
+interface CustomSocket extends Socket {
+  server: {
+    io?: Server;
+  };
+}
+
+interface CustomResponse extends NextApiResponse {
+  socket: CustomSocket;
+}
+
+const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
   if (!res.socket.server.io) {
     console.log("initializing socket.io");
-    const io = new Server(res.socket.server);
+    // no idea what type this is supposed to be
+    const server: any = res.socket.server;
+    const io = new Server(server);
 
     io.on("connection", (socket) => {
       socket.broadcast.emit("a user connected");

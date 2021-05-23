@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "root": true,
   "env": {
     "browser": true,
@@ -8,9 +8,11 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
   ],
-  "plugins": ["import", "react"],
+  "plugins": ["import", "react", "@typescript-eslint"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

@@ -4,6 +4,6 @@ const StyledPage = styled.div`
   background: #def;
 `;
 
-const Page = ({ children = null }) => <StyledPage>{children}</StyledPage>;
+const Page: React.FC = ({ children }) => <StyledPage>{children}</StyledPage>;
 
 export default Page;
