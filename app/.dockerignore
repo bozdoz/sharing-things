@@ -1,3 +1,8 @@
 node_modules
 Dockerfile
 README.md
+.dockerignore
+npm-debug.log
+.next
+.eslint*
+.prettierrc

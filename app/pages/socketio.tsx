@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import io from "socket.io-client";
 
-const SocketIo = () => {
+const SocketIo: React.FC = () => {
   useEffect(() => {
     fetch("/api/socketio").then(() => {
       const socket = io();
