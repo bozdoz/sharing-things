@@ -1,0 +1,83 @@
+:root {
+  --color-scale-black: #061621;
+  --color-scale-white: #f9fbfa;
+  --color-scale-light-grey: #c9d1d9;
+  --color-scale-grey: #8b949e;
+  --color-scale-dark-grey: #21313c;
+  --color-text-link: #58a6ff;
+  --color-text-danger: #f85149;
+  --color-text-success: #56d364;
+  --color-text-warning: #e3b341;
+  --color-text-white: #f0f6fc;
+  --color-bg-primary: var(--color-scale-white);
+  --color-fg-primary: var(--color-scale-black);
+  --color-bg-secondary: var(--color-scale-light-grey);
+  --color-fg-secondary: var(--color-scale-dark-grey);
+  --color-box-shadow: rgba(0, 0, 0, 0.2);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+body {
+  color: var(--color-fg-primary);
+  background: var(--color-bg-primary);
+}
+
+body.dark-mode {
+  --color-bg-primary: var(--color-scale-black);
+  --color-fg-primary: var(--color-scale-light-grey);
+  --color-bg-secondary: var(--color-scale-dark-grey);
+  --color-fg-secondary: var(--color-scale-light-grey);
+  --color-box-shadow: rgba(255, 255, 255, 0.2);
+}
+
+button {
+  background: var(--color-bg-secondary);
+  color: var(--color-fg-secondary);
+  border: 0;
+  padding: 0.5em 1.2em;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+
+  [disabled] & {
+    cursor: default;
+  }
+}
+
+input,
+textarea {
+  transition: box-shadow 0.3s;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  box-shadow: var(--color-box-shadow) 2px 2px 2px;
+
+  &:focus {
+    box-shadow: var(--color-box-shadow) 5px 5px 5px;
+  }
+}
+input {
+  padding: 1em 1.2em;
+}
+textarea {
+  padding: 0.6em 0.8em;
+}
