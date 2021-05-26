@@ -20,7 +20,8 @@
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",
     "styled-components": "^5.3.0",
-    "swr": "^0.5.6"
+    "swr": "^0.5.6",
+    "zustand": "^3.5.1"
   },
   "devDependencies": {
     "@types/node": "^15.6.0",

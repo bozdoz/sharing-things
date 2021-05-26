@@ -1,12 +1,14 @@
 //TODO: API for creating/updating users?
 
 import Usage from "components/Usage";
+import useStore from "hooks/useStore";
 import { useMemo } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 const Home: React.FC = () => {
-  const [name, setName] = useLocalStorage("username");
-  const [beWarned, setBeWarned] = useLocalStorage("beWarned", "true");
+  const name = useStore((state) => state.name);
+  const setName = useStore((state) => state.setName);
+  const beWarned = useStore((state) => state.beWarned);
+  const setBeWarned = useStore((state) => state.setBeWarned);
   const UsageMemo = useMemo(() => {
     return <Usage />;
   }, []);
@@ -22,14 +24,15 @@ const Home: React.FC = () => {
           placeholder="Your Name"
           value={name || ""}
           onChange={(e) => setName(e.target.value)}
+          onFocus={(e) => e.target.select()}
         />
       </div>
       <div>
         <label>
           <input
             type="checkbox"
-            checked={beWarned === "true"}
-            onChange={(e) => setBeWarned(e.target.checked ? "true" : "false")}
+            checked={beWarned}
+            onChange={(e) => setBeWarned(e.target.checked)}
           />
           I want to be warned before closing the page
         </label>

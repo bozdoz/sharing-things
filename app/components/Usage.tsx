@@ -1,24 +1,20 @@
-// TODO: Add Redux
-import { useEffect, useRef } from "react";
+import useStore from "hooks/useStore";
+
+const date = new Date();
 
 const Usage: React.FC = () => {
-  const date = useRef<Date>();
-
-  // added to useEffect to get around nextjs's server-side rendering
-  useEffect(() => {
-    date.current = new Date();
-  }, []);
+  const name = useStore((state) => state.name);
 
   return (
     <>
       <h2>2. What do you want to use? </h2>
-      <fieldset disabled>
+      <fieldset disabled={!name}>
         <div>
           <div>
             <div>
               Flex{" "}
               <small>
-                claimed by {name} ({`${date.current}`})
+                claimed by {name} ({`${date}`})
               </small>
             </div>
             <div>

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 type JSONValue = string | undefined;
 
-const useLocalStorage = (
+const useLocalStorage = <T extends JSONValue>(
   key: string,
-  initialValue: JSONValue = undefined
-): [JSONValue, (a: JSONValue) => void] => {
-  const [storedValue, setStoredValue] = useState<JSONValue>();
+  initialValue: T = undefined as T
+): [T, (a: T) => void] => {
+  const [storedValue, setStoredValue] = useState<T>();
 
   // using useEffect to avoid next's server-side render
   useEffect(() => {
@@ -19,7 +19,7 @@ const useLocalStorage = (
     }
   }, [key, initialValue, storedValue]);
 
-  const setValue = (value: JSONValue) => {
+  const setValue = (value: T) => {
     try {
       setStoredValue(value);
       localStorage.setItem(key, JSON.stringify(value));
@@ -28,7 +28,7 @@ const useLocalStorage = (
     }
   };
 
-  return [storedValue, setValue];
+  return [storedValue as T, setValue];
 };
 
 export default useLocalStorage;
