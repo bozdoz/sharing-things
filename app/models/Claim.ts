@@ -1,31 +1,35 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models, Model } from "mongoose";
 import { User } from "./User";
 import { Server } from "./Server";
 
 interface Claim {
   user: User;
   server: Server;
-  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const ClaimSchema = new Schema<Claim>({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "Please provide a user."],
-  },
+const ClaimSchema = new Schema<Claim, Model<Claim>>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Please provide a user."],
+    },
 
-  server: {
-    type: Schema.Types.ObjectId,
-    ref: "Server",
-    required: [true, "Please provide a server."],
+    server: {
+      type: Schema.Types.ObjectId,
+      ref: "Server",
+      required: [true, "Please provide a server."],
+    },
   },
+  {
+    timestamps: true,
+  }
+);
 
-  date: {
-    type: Date,
-    required: [true, "Please provide a date."],
-    default: Date.now(),
-  },
-});
+const getModel = () => model("Claim", ClaimSchema);
 
-export default model("Claim", ClaimSchema);
+// exporting one or the other due to hot-reloading
+// which is re-initializing identical models
+export default (models.Claim || getModel()) as ReturnType<typeof getModel>;
