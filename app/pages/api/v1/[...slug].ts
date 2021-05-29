@@ -41,10 +41,10 @@ export default async function handler(req: Req, res: Res) {
   const slug = getSlug(req);
   const len = slug.length;
 
-  const action = len === 1 ? "list" : (slug[len - 1] as keyof typeof actions);
+  let action = len === 1 ? "list" : (slug[len - 1] as keyof typeof actions);
 
   if (!(action in actions)) {
-    throw new Error(`No action found: ${action}`);
+    action = "view";
   }
 
   await dbConnect();
@@ -96,6 +96,7 @@ const update = async (req: Req, res: Res) => {
   const instance = await model.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true,
+    upsert: true,
   });
   res.status(200).json({ success: true, data: instance });
 };
