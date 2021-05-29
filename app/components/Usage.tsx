@@ -1,4 +1,5 @@
 import useStore from "hooks/useStore";
+import AddServer from "./AddServer";
 
 const date = new Date();
 
@@ -7,26 +8,28 @@ const Usage: React.FC = () => {
 
   return (
     <>
-      <h2>2. What do you want to use? </h2>
+      <h2>2. What do you want to use? 🤷‍♀️</h2>
       <fieldset disabled={!name}>
-        <div>
+        {false && (
           <div>
             <div>
-              Flex{" "}
-              <small>
-                claimed by {name} ({`${date}`})
-              </small>
-            </div>
-            <div>
-              <textarea placeholder="Message here (optional)"></textarea>
-            </div>
-            <div>
-              <button type="button">CLAIM</button>
+              <div>
+                Flex{" "}
+                <small>
+                  claimed by {name} ({`${date}`})
+                </small>
+              </div>
+              <div>
+                <textarea placeholder="Message here (optional)"></textarea>
+              </div>
+              <div>
+                <button type="button">CLAIM</button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div>
-          <button type="button">PLUS SIGN</button>
+          <AddServer />
         </div>
       </fieldset>
     </>
