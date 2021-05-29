@@ -3,8 +3,10 @@ import { Schema, model, models, Model } from "mongoose";
 export interface User {
   name: string;
   active: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly _id: string;
+  readonly __v: string;
 }
 
 const UserSchema = new Schema<User, Model<User>>(

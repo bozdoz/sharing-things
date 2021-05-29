@@ -12,6 +12,7 @@
     "pretest": "npm run lint"
   },
   "dependencies": {
+    "color-hash": "^2.0.1",
     "mongoose": "^5.12.10",
     "next": "10.2.2",
     "react": "17.0.2",
@@ -21,12 +22,15 @@
     "socket.io-client": "^4.1.2",
     "styled-components": "^5.3.0",
     "swr": "^0.5.6",
+    "throttle-debounce": "^3.0.1",
     "zustand": "^3.5.1"
   },
   "devDependencies": {
+    "@types/color-hash": "^1.0.0",
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
     "@types/styled-components": "^5.1.9",
+    "@types/throttle-debounce": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "babel-eslint": "^10.1.0",
