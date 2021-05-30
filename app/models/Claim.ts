@@ -1,12 +1,11 @@
 import { Schema, model, models, Model } from "mongoose";
 import { User } from "./User";
-import { Server } from "./Server";
+import { Thing } from "./Thing";
+import { BaseModel } from "./BaseModel";
 
-interface Claim {
+export interface Claim extends BaseModel {
   user: User;
-  server: Server;
-  createdAt: Date;
-  updatedAt: Date;
+  thing: Thing;
 }
 
 const ClaimSchema = new Schema<Claim, Model<Claim>>(
@@ -17,10 +16,10 @@ const ClaimSchema = new Schema<Claim, Model<Claim>>(
       required: [true, "Please provide a user."],
     },
 
-    server: {
+    thing: {
       type: Schema.Types.ObjectId,
-      ref: "Server",
-      required: [true, "Please provide a server."],
+      ref: "Thing",
+      required: [true, "Please provide a thing."],
     },
   },
   {

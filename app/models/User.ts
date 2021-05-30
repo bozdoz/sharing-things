@@ -1,12 +1,9 @@
 import { Schema, model, models, Model } from "mongoose";
+import { BaseModel } from "./BaseModel";
 
-export interface User {
+export interface User extends BaseModel {
   name: string;
   active: boolean;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly _id: string;
-  readonly __v: string;
 }
 
 const UserSchema = new Schema<User, Model<User>>(
