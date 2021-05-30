@@ -36,7 +36,7 @@ const Avatar = styled.div<Props>`
   position: absolute;
   margin-left: -2.6em;
   margin-top: 0.6em;
-  transition: all 0.4s 0.8s;
+  transition: all var(--anim) var(--delay);
 `;
 
 export default Avatar;

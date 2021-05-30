@@ -14,6 +14,9 @@
   --color-bg-secondary: var(--color-scale-dark-grey);
   --color-fg-secondary: var(--color-scale-light-grey);
   --color-box-shadow: rgba(103, 178, 243, 0.783);
+  --border-radius: 5px;
+  --anim: 0.4s;
+  --delay: 0.8s;
 }
 
 ::selection {
@@ -55,7 +58,7 @@ button {
   border: 0;
   padding: 0.5em 1.2em;
   font-size: 0.8rem;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   transition: box-shadow 0.2s;
 
@@ -76,11 +79,11 @@ button {
 
 input[type="text"],
 textarea {
-  transition: box-shadow 0.3s;
+  transition: box-shadow var(--anim);
   font-size: 1rem;
   border: none;
   outline: none;
-  border-radius: 3px;
+  border-radius: var(--border-radius);
   box-shadow: var(--color-box-shadow) 2px 2px 2px;
   margin-bottom: 0.8em;
 
