@@ -9,11 +9,16 @@
   --color-text-success: #56d364;
   --color-text-warning: #e3b341;
   --color-text-white: #f0f6fc;
-  --color-bg-primary: var(--color-scale-white);
-  --color-fg-primary: var(--color-scale-black);
-  --color-bg-secondary: var(--color-scale-light-grey);
-  --color-fg-secondary: var(--color-scale-dark-grey);
-  --color-box-shadow: rgba(0, 0, 0, 0.2);
+  --color-bg-primary: var(--color-scale-black);
+  --color-fg-primary: var(--color-scale-light-grey);
+  --color-bg-secondary: var(--color-scale-dark-grey);
+  --color-fg-secondary: var(--color-scale-light-grey);
+  --color-box-shadow: rgba(103, 178, 243, 0.783);
+}
+
+::selection {
+  color: white;
+  background: var(--color-text-link);
 }
 
 html,
@@ -33,46 +38,54 @@ a {
 
 * {
   box-sizing: border-box;
-  transition: all 0.2s;
+  transition-property: color, background, background-color;
+  transition-duration: 0.2s;
 }
 
 body {
+  padding-top: 20vh;
+  padding-bottom: 94vh;
   color: var(--color-fg-primary);
   background: var(--color-bg-primary);
 }
 
-body.dark-mode {
-  --color-bg-primary: var(--color-scale-black);
-  --color-fg-primary: var(--color-scale-light-grey);
-  --color-bg-secondary: var(--color-scale-dark-grey);
-  --color-fg-secondary: var(--color-scale-light-grey);
-  --color-box-shadow: rgba(255, 255, 255, 0.2);
-}
-
 button {
-  background: var(--color-bg-secondary);
-  color: var(--color-fg-secondary);
+  background: var(--color-scale-dark-grey);
+  color: var(--color-scale-white);
   border: 0;
   padding: 0.5em 1.2em;
   font-size: 0.8rem;
   border-radius: 5px;
   cursor: pointer;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: inset rgba(255, 255, 255, 0.1) -10000px -10000px;
+  }
 
   [disabled] & {
     cursor: default;
+    box-shadow: inset rgba(0, 0, 0, 0.1) -10000px -10000px;
+    color: var(--color-scale-light-grey);
+  }
+
+  &.primary-button {
+    background: var(--color-text-link);
   }
 }
 
-input,
+input[type="text"],
 textarea {
   transition: box-shadow 0.3s;
   font-size: 1rem;
   border: none;
   outline: none;
+  border-radius: 3px;
   box-shadow: var(--color-box-shadow) 2px 2px 2px;
+  margin-bottom: 0.8em;
 
   &:focus {
-    box-shadow: var(--color-box-shadow) 5px 5px 5px;
+    box-shadow: var(--color-box-shadow) 0px 5px 1px;
   }
 }
 input {
@@ -80,4 +93,32 @@ input {
 }
 textarea {
   padding: 0.6em 0.8em;
+}
+
+input[type="checkbox"] {
+  width: 3em;
+  height: 3em;
+  padding: 0;
+  margin: 0;
+  margin-right: 0.4em;
+  cursor: pointer;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+h2 {
+  padding-top: 2.4em;
+  margin-bottom: 0.6em;
+  opacity: 1;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 2.4em;
 }
