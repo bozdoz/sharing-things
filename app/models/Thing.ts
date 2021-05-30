@@ -1,16 +1,14 @@
 import { Schema, model, models, Model } from "mongoose";
+import { BaseModel } from "./BaseModel";
 import { User } from "./User";
 
-export interface Server {
+export interface Thing extends BaseModel {
   title: string;
   message?: string;
-  user?: User;
-
-  createdAt: Date;
-  updatedAt: Date;
+  user?: User | User["_id"];
 }
 
-const ServerSchema = new Schema<Server, Model<Server>>(
+const ThingSchema = new Schema<Thing, Model<Thing>>(
   {
     title: {
       type: String,
@@ -31,8 +29,8 @@ const ServerSchema = new Schema<Server, Model<Server>>(
   }
 );
 
-const getModel = () => model("Server", ServerSchema);
+const getModel = () => model("Thing", ThingSchema);
 
 // exporting one or the other due to hot-reloading
 // which is re-initializing identical models
-export default (models.Server || getModel()) as ReturnType<typeof getModel>;
+export default (models.Thing || getModel()) as ReturnType<typeof getModel>;
