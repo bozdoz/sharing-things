@@ -27,12 +27,10 @@ const useUserStore = create<State>(
         if (userId) {
           await debouncedUpdateUser(userId, {
             name,
-            active: true,
           });
         } else {
           const { _id: userId } = await debouncedCreateUser({
             name,
-            active: true,
           });
           set(() => ({ userId }));
         }

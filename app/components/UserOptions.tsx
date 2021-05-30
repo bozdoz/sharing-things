@@ -25,7 +25,7 @@ const UserOptions: React.FC = () => {
           checked={beWarned}
           onChange={(e) => setBeWarned(e.target.checked)}
         />
-        I want to be warned before closing the page
+        Warn me before closing the page
       </label>
     </Grid>
   );

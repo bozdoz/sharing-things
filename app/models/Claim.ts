@@ -1,12 +1,5 @@
 import { Schema, model, models, Model } from "mongoose";
-import { User } from "./User";
-import { Thing } from "./Thing";
-import { BaseModel } from "./BaseModel";
-
-export interface Claim extends BaseModel {
-  user: User;
-  thing: Thing;
-}
+import { Claim } from "./types";
 
 const ClaimSchema = new Schema<Claim, Model<Claim>>(
   {

@@ -1,6 +1,6 @@
 import { mutate } from "swr";
 import api from "utils/api";
-import { BaseModel } from "models/BaseModel";
+import { BaseModel } from "models/types";
 
 interface ApiResponse<T> {
   success: boolean;
