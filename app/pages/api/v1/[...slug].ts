@@ -4,11 +4,14 @@
  */
 
 import { NextApiRequest as Req, NextApiResponse as Res } from "next";
+import { Model } from "mongoose";
 import dbConnect from "utils/dbConnect";
 import User from "models/User";
+import Thing from "models/Thing";
 
 const modelMap = {
   user: User,
+  thing: Thing,
 };
 
 const getSlug = (req: Req) => {
@@ -19,7 +22,7 @@ const getSlug = (req: Req) => {
   return slug;
 };
 
-const getModel = (req: Req) => {
+const getModel = (req: Req): Model<any> => {
   // SLUGS:
   // /api/v1/user/create
   // /api/v1/user/123/view (one)
