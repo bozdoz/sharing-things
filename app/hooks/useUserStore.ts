@@ -1,7 +1,7 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
 import { debounce } from "throttle-debounce";
-import { createUser, updateUser } from "resources/userResource";
+import { userResource } from "resources";
 
 interface State {
   name: string;
@@ -12,10 +12,10 @@ interface State {
   setUserId(userId: string): void;
 }
 
-const debouncedCreateUser = debounce(800, createUser);
-const debouncedUpdateUser = debounce(800, updateUser);
+const debouncedCreateUser = debounce(800, userResource.create);
+const debouncedUpdateUser = debounce(800, userResource.update);
 
-const useStore = create<State>(
+const useUserStore = create<State>(
   persist(
     (set, get) => ({
       name: "",
@@ -48,4 +48,4 @@ const useStore = create<State>(
   )
 );
 
-export default useStore;
+export default useUserStore;
