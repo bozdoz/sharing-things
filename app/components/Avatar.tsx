@@ -28,15 +28,16 @@ const getBorderRadius = ({ name }: Props): string => {
 };
 
 const Avatar = styled.div<Props>`
+  --size: 2em;
   opacity: ${(props) => (props.name ? 1 : 0)};
   background: ${(props) => colorHash.hex(props.name)};
-  width: 2em;
-  height: 2em;
+  width: var(--size);
+  height: var(--size);
   border-radius: ${getBorderRadius};
-  position: absolute;
-  margin-left: -2.6em;
-  margin-top: 0.6em;
-  transition: all var(--anim) var(--delay);
+  transition: all;
+  transition-duration: var(--anim);
+  transition-delay: var(--delay);
+  display: inline-block;
 `;
 
 export default Avatar;
