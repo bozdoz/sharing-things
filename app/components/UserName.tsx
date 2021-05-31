@@ -5,6 +5,12 @@ import Avatar from "./Avatar";
 const Grid = styled.div`
   display: grid;
   margin: 0 3.2em;
+
+  ${Avatar} {
+    position: absolute;
+    margin-left: -2.6em;
+    margin-top: 0.6em;
+  }
 `;
 
 // workflow:
