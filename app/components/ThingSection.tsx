@@ -1,4 +1,4 @@
-import useUserStore from "hooks/useUserStore";
+import useUserStore, { State } from "hooks/useUserStore";
 import styled from "styled-components";
 import AddThing from "./AddThing";
 import ThingList from "./ThingList";
@@ -8,13 +8,15 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   transition: opacity var(--anim) var(--delay);
 `;
 
+const nameEmptySelector = (state: State) => !state.name;
+
 const Usage: React.FC = () => {
-  const name = useUserStore((state) => state.name);
+  const isNameEmpty = useUserStore(nameEmptySelector);
 
   return (
-    <Wrapper disabled={!name}>
+    <Wrapper disabled={isNameEmpty}>
       <h2>2. What Thing do you want to claim? 🤷‍♀️</h2>
-      <fieldset disabled={!name}>
+      <fieldset disabled={isNameEmpty}>
         <ThingList />
         <AddThing />
       </fieldset>
