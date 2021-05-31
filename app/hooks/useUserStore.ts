@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { debounce } from "throttle-debounce";
 import { userResource } from "resources";
 
-interface State {
+export interface State {
   name: string;
   setName(name: string): void;
   beWarned: boolean;
