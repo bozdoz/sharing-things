@@ -7,11 +7,18 @@ interface ApiResponse<T> {
   data: T;
 }
 
-const resourceFactory = <T extends BaseModel>(model: string) => {
+const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
+  model: string,
+  {
+    postUpdate,
+  }: {
+    postUpdate?: () => void;
+  } = {}
+) => {
   const prefix = `/api/v1/${model}`;
   const listView = `${prefix}/list`;
 
-  const request = async (body: Writable<T> | Partial<T>, suffix: string) => {
+  const request = async (suffix: string, body?: Writable<T> | Partial<U>) => {
     const res = await api<ApiResponse<T>>(`${prefix}${suffix}`, {
       body,
     });
@@ -22,14 +29,20 @@ const resourceFactory = <T extends BaseModel>(model: string) => {
     return res.data;
   };
 
-  const update = (id: string, body: Partial<T>) =>
-    request(body, `/${id}/update`);
+  const update = async (id: string, body: Partial<U>) => {
+    await request(`/${id}/update`, body);
 
-  const create = (body: Writable<T>) => request(body, `/create`);
+    postUpdate?.();
+  };
+
+  const create = (body: Writable<T>) => request(`/create`, body);
+
+  const deleteFn = (id: string) => request(`/${id}/delete`);
 
   return {
     create,
     update,
+    delete: deleteFn,
   };
 };
 
