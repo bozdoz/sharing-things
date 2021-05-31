@@ -1,7 +1,7 @@
 import { Schema, model, models, Model } from "mongoose";
 import { Claim } from "./types";
 
-const ClaimSchema = new Schema<Claim, Model<Claim>>(
+const ClaimSchema = new Schema<Claim>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -19,6 +19,11 @@ const ClaimSchema = new Schema<Claim, Model<Claim>>(
     timestamps: true,
   }
 );
+
+ClaimSchema.pre("find", function () {
+  // return related user, instead of id
+  this.populate("user");
+});
 
 const getModel = () => model("Claim", ClaimSchema);
 

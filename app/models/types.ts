@@ -15,15 +15,15 @@ export interface User extends BaseModel {
   active?: boolean;
 }
 
-export interface Thing extends BaseModel {
+export interface Thing<Updating = false> extends BaseModel {
   title: string;
   message?: string;
   /** current claim */
-  claim?: Claim | Claim["_id"];
+  claim?: null | (Updating extends true ? string : Claim);
 }
 
 /** record of claims */
-export interface Claim extends BaseModel {
-  user: User | User["_id"];
-  thing: Thing | Thing["_id"];
+export interface Claim<Viewing = false> extends BaseModel {
+  user: Viewing extends true ? string : User;
+  thing: Viewing extends true ? string : Thing;
 }

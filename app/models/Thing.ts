@@ -12,15 +12,20 @@ const ThingSchema = new Schema<Thing, Model<Thing>>(
       type: String,
       maxlength: [500, "Message cannot be more than 500 characters"],
     },
-    user: {
+    claim: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Claim",
     },
   },
   {
     timestamps: true,
   }
 );
+
+ThingSchema.pre("find", function () {
+  // return related claim, instead of id
+  this.populate("claim");
+});
 
 const getModel = () => model("Thing", ThingSchema);
 
