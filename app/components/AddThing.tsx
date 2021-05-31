@@ -1,5 +1,4 @@
-import useUserStore from "hooks/useUserStore";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { thingResource } from "resources";
 import styled from "styled-components";
 
@@ -9,48 +8,66 @@ const Wrapper = styled.div<{ isLoading: boolean }>`
 `;
 
 const AddThing: React.FC = () => {
-  const userId = useUserStore((state) => state.userId);
   const [isCreating, setIsCreating] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [formState, setFormState] = useState("");
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const handleToggleForm = useCallback(() => {
+    setIsCreating(false);
+    setFormState("");
+  }, []);
 
   const handleCreate = useCallback(async () => {
     setIsLoading(true);
     try {
-      if (userId && title) {
+      if (title) {
         await thingResource.create({
           title,
           message,
-          user: userId,
         });
 
         // reset form
-        setIsCreating(false);
         setTitle("");
         setMessage("");
+        handleToggleForm();
       } else {
-        // TODO: message that fields are required
+        setFormState("Title is required");
       }
     } catch (e) {
       console.error(e);
-      // TODO: message that submission failed
+      setFormState("Submission failed");
     } finally {
       setIsLoading(false);
     }
-  }, [userId, title, message]);
+  }, [title, message, handleToggleForm]);
 
   if (!isCreating) {
     return (
-      <button onClick={() => setIsCreating(true)} type="button">
+      <button
+        onClick={() => {
+          setIsCreating(true);
+
+          setTimeout(() => {
+            formRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+            });
+          }, 50);
+        }}
+        type="button"
+      >
         Create a Thing
       </button>
     );
   }
 
   return (
-    <Wrapper isLoading={isLoading}>
+    <Wrapper isLoading={isLoading} ref={formRef}>
       <div>New Thing</div>
+      {formState && <div>{formState}</div>}
       <input
         type="text"
         value={title}
@@ -69,7 +86,7 @@ const AddThing: React.FC = () => {
       />
       <br />
 
-      <button onClick={() => setIsCreating(false)} type="button">
+      <button onClick={handleToggleForm} type="button">
         Cancel
       </button>
       <button className="primary-button" onClick={handleCreate} type="button">
