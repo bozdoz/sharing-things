@@ -1,4 +1,4 @@
-import useUserStore from "hooks/useUserStore";
+import useStore from "hooks/useStore";
 import styled from "styled-components";
 import Avatar from "./Avatar";
 
@@ -20,7 +20,7 @@ const Grid = styled.div`
 // 4. handles beforeonleave/active state
 // 5.
 const UserName: React.FC = () => {
-  const { name, setName } = useUserStore();
+  const { name, setName } = useStore();
 
   return (
     <Grid>

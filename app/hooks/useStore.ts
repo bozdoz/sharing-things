@@ -1,7 +1,8 @@
-import create from "zustand";
+import create, { SetState } from "zustand";
 import { persist } from "zustand/middleware";
 import { debounce } from "throttle-debounce";
 import { userResource } from "resources";
+import { User } from "models/types";
 
 export interface State {
   name: string;
@@ -12,10 +13,19 @@ export interface State {
   setUserId(userId: string): void;
 }
 
-const debouncedCreateUser = debounce(800, userResource.create);
+// need to pass the state setter to the debounced function
+// so that I can update state after resource is created
+const debouncedCreateUser = debounce(
+  800,
+  async (set: SetState<State>, user: Writable<User>) => {
+    const { _id: userId } = await userResource.create(user);
+
+    set({ userId });
+  }
+);
 const debouncedUpdateUser = debounce(800, userResource.update);
 
-const useUserStore = create<State>(
+const useStore = create<State>(
   persist(
     (set, get) => ({
       name: "",
@@ -25,14 +35,13 @@ const useUserStore = create<State>(
         const { userId } = get();
 
         if (userId) {
-          await debouncedUpdateUser(userId, {
+          debouncedUpdateUser(userId, {
             name,
           });
         } else {
-          const { _id: userId } = await debouncedCreateUser({
+          debouncedCreateUser(set, {
             name,
           });
-          set(() => ({ userId }));
         }
       },
       beWarned: true,
@@ -46,4 +55,4 @@ const useUserStore = create<State>(
   )
 );
 
-export default useUserStore;
+export default useStore;

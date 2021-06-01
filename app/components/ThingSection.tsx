@@ -1,4 +1,4 @@
-import useUserStore, { State } from "hooks/useUserStore";
+import useStore, { State } from "hooks/useStore";
 import styled from "styled-components";
 import AddThing from "./AddThing";
 import ThingList from "./ThingList";
@@ -11,7 +11,7 @@ const Wrapper = styled.div<{ disabled: boolean }>`
 const nameEmptySelector = (state: State) => !state.name;
 
 const Usage: React.FC = () => {
-  const isNameEmpty = useUserStore(nameEmptySelector);
+  const isNameEmpty = useStore(nameEmptySelector);
 
   return (
     <Wrapper disabled={isNameEmpty}>

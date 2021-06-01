@@ -1,4 +1,4 @@
-import useUserStore from "hooks/useUserStore";
+import useStore from "hooks/useStore";
 import styled from "styled-components";
 import UserName from "./UserName";
 
@@ -12,8 +12,8 @@ const Grid = styled.div`
 `;
 
 const UserOptions: React.FC = () => {
-  const beWarned = useUserStore((state) => state.beWarned);
-  const setBeWarned = useUserStore((state) => state.setBeWarned);
+  const beWarned = useStore((state) => state.beWarned);
+  const setBeWarned = useStore((state) => state.setBeWarned);
 
   return (
     <Grid>

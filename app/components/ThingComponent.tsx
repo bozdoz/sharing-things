@@ -1,4 +1,4 @@
-import useUserStore from "hooks/useUserStore";
+import useStore from "hooks/useStore";
 import { Thing } from "models/types";
 import { useCallback, useRef, useState } from "react";
 import styled from "styled-components";
@@ -39,7 +39,7 @@ const ThingComponent: React.FC<Thing> = ({
   message,
   claim,
 }) => {
-  const user = useUserStore((state) => state.userId);
+  const user = useStore((state) => state.userId);
   const [deletePending, setDeletePending] = useState(false);
   const t = useRef<number>();
   const claimedByCurrentUser = claim?.user._id === user;
