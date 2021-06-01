@@ -1,18 +1,16 @@
 :root {
-  --color-scale-black: #061621;
+  --color-primary: #0c3149;
+  --color-scale-black: #04040b;
   --color-scale-white: #f9fbfa;
   --color-scale-light-grey: #c9d1d9;
   --color-scale-grey: #8b949e;
-  --color-scale-dark-grey: #21313c;
+  --color-scale-dark-grey: var(--color-primary);
   --color-text-link: #58a6ff;
-  --color-text-danger: #f85149;
+  --color-text-danger: #cc190b;
   --color-text-success: #56d364;
   --color-text-warning: #e3b341;
-  --color-text-white: #f0f6fc;
   --color-bg-primary: var(--color-scale-black);
   --color-fg-primary: var(--color-scale-light-grey);
-  --color-bg-secondary: var(--color-scale-dark-grey);
-  --color-fg-secondary: var(--color-scale-light-grey);
   --color-box-shadow: rgba(103, 178, 243, 0.783);
   --border-radius: 5px;
   --anim: 0.4s;
@@ -46,7 +44,6 @@ a {
 }
 
 body {
-  padding-top: 20vh;
   padding-bottom: 94vh;
   color: var(--color-fg-primary);
   background: var(--color-bg-primary);
@@ -62,8 +59,12 @@ button {
   cursor: pointer;
   transition: box-shadow 0.2s;
 
-  &:hover {
-    box-shadow: inset rgba(255, 255, 255, 0.1) -10000px -10000px;
+  &:hover,
+  &:focus {
+    box-shadow: inset rgba(255, 255, 255, 0.05) -10000px -10000px;
+  }
+  &:active {
+    box-shadow: inset rgba(0, 0, 0, 0.3) -10000px -10000px;
   }
 
   [disabled] & {
@@ -114,9 +115,9 @@ label {
 }
 
 h2 {
-  padding-top: 2.4em;
-  margin-bottom: 0.6em;
-  opacity: 1;
+  padding-top: 1.6em;
+  margin: 0;
+  margin-bottom: 0.8em;
 }
 
 fieldset {

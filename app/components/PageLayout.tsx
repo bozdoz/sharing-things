@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import HeaderImage from "./HeaderImage";
 
 const breakpoint = "600px";
 
@@ -13,8 +14,18 @@ const StyledPage = styled.div`
   @media (min-width: ${breakpoint}) {
     grid-template-columns: 1fr ${breakpoint} 1fr;
   }
+
+  #header-image {
+    /* full-width header image */
+    grid-column: 1 / span 3;
+  }
 `;
 
-const Page: React.FC = ({ children }) => <StyledPage>{children}</StyledPage>;
+const Page: React.FC = ({ children }) => (
+  <StyledPage>
+    <HeaderImage />
+    {children}
+  </StyledPage>
+);
 
 export default Page;

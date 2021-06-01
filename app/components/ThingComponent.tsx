@@ -6,8 +6,8 @@ import { claimResource, thingResource } from "resources";
 import Avatar from "./Avatar";
 
 const ThingWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.2);
-  margin-bottom: 1em;
+  background: rgba(12, 49, 73, 0.4);
+  margin: 0.5em 0 2em;
   padding: 1em;
   border-radius: var(--border-radius);
   display: grid;

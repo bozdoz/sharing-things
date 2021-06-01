@@ -15,7 +15,7 @@ const Usage: React.FC = () => {
 
   return (
     <Wrapper disabled={isNameEmpty}>
-      <h2>2. What Thing do you want to claim? 🤷‍♀️</h2>
+      <h2>What Thing do you want to claim? 🤷‍♀️</h2>
       <fieldset disabled={isNameEmpty}>
         <ThingList />
         <AddThing />

@@ -17,7 +17,7 @@ const UserOptions: React.FC = () => {
 
   return (
     <Grid>
-      <h2>1. Who Are You? 👋</h2>
+      <h2>Who Are You? 👋</h2>
       <UserName />
       <label>
         <input
