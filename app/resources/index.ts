@@ -9,11 +9,11 @@ export const userResource = resourceFactory<User>("user", {
   },
 });
 
+// path name is the namespace
+const { pathname } = window.location;
+
 export const thingResource = resourceFactory<Thing, Thing<true>>("thing", {
-  postCreate: ({ namespace }) => {
-    // need to invalidate cache specifically for namespace
-    mutate(`/api/v1/thing/list?namespace=${namespace}`);
-  },
+  listView: `/api/v1/thing/list?namespace=${pathname}`,
 });
 
 export const claimResource = resourceFactory<Claim<true>>("claim");

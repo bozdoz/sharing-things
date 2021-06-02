@@ -11,14 +11,15 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
   model: string,
   {
     postUpdate,
-    postCreate,
+    listView = "",
   }: {
-    postUpdate?: () => void;
-    postCreate?: (body: Writable<T>) => void;
+    postUpdate?: (body: T) => void;
+    /** custom listView to purge from cache */
+    listView?: string;
   } = {}
 ) => {
   const prefix = `/api/v1/${model}`;
-  const listView = `${prefix}/list`;
+  const defaultListView = `${prefix}/list`;
 
   const request = async (suffix: string, body?: Writable<T> | Partial<U>) => {
     const res = await api<ApiResponse<T>>(`${prefix}${suffix}`, {
@@ -26,22 +27,20 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
     });
 
     // invalidate cache of list views
-    mutate(listView);
+    mutate(listView || defaultListView);
 
     return res.data;
   };
 
   const update = async (id: string, body: Partial<U>) => {
-    await request(`/${id}/update`, body);
+    const instance = await request(`/${id}/update`, body);
 
-    postUpdate?.();
+    postUpdate?.(instance);
+
+    return instance;
   };
 
-  const create = async (body: Writable<T>) => {
-    await request(`/create`, body);
-
-    postCreate?.(body);
-  };
+  const create = (body: Writable<T>) => request(`/create`, body);
 
   const deleteFn = (id: string) => request(`/${id}/delete`);
 
