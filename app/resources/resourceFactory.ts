@@ -11,8 +11,10 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
   model: string,
   {
     postUpdate,
+    postCreate,
   }: {
     postUpdate?: () => void;
+    postCreate?: (body: Writable<T>) => void;
   } = {}
 ) => {
   const prefix = `/api/v1/${model}`;
@@ -35,7 +37,11 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
     postUpdate?.();
   };
 
-  const create = (body: Writable<T>) => request(`/create`, body);
+  const create = async (body: Writable<T>) => {
+    await request(`/create`, body);
+
+    postCreate?.(body);
+  };
 
   const deleteFn = (id: string) => request(`/${id}/delete`);
 

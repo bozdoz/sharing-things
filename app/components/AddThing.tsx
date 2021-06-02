@@ -1,13 +1,14 @@
 import { useCallback, useRef, useState } from "react";
-import { thingResource } from "resources";
+import { withRouter } from "next/router";
 import styled from "styled-components";
+import { thingResource } from "resources";
 
 const Wrapper = styled.div<{ isLoading: boolean }>`
   box-shadow: ${(props) =>
     props.isLoading ? `inset rgba(0,0,0,0.3) -1000px -1000px` : `none`};
 `;
 
-const AddThing: React.FC = () => {
+const AddThing = withRouter(({ router }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -27,6 +28,7 @@ const AddThing: React.FC = () => {
         await thingResource.create({
           title,
           message,
+          namespace: router.asPath,
         });
 
         // reset form
@@ -42,7 +44,7 @@ const AddThing: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [title, message, handleToggleForm]);
+  }, [title, message, handleToggleForm, router.asPath]);
 
   if (!isCreating) {
     return (
@@ -51,10 +53,14 @@ const AddThing: React.FC = () => {
           setIsCreating(true);
 
           setTimeout(() => {
+            // bring form fully into view
             formRef.current?.scrollIntoView({
               behavior: "smooth",
               block: "nearest",
             });
+
+            // focus on first input
+            formRef.current?.querySelector("input")?.focus();
           }, 50);
         }}
         type="button"
@@ -94,6 +100,6 @@ const AddThing: React.FC = () => {
       </button>
     </Wrapper>
   );
-};
+});
 
 export default AddThing;

@@ -20,6 +20,11 @@ export interface Thing<Updating = false> extends BaseModel {
   message?: string;
   /** current claim */
   claim?: null | (Updating extends true ? string : Claim);
+  /**
+   * use routes to share things in multiple namespaces:
+   * URL /path/is/your/namespace
+   */
+  namespace: string;
 }
 
 /** record of claims */

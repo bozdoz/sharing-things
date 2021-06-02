@@ -1,5 +1,6 @@
-import { Thing } from "models/types";
 import useSWR from "swr";
+import { withRouter } from "next/router";
+import { Thing } from "models/types";
 import api from "utils/api";
 import ThingComponent from "./ThingComponent";
 
@@ -8,8 +9,11 @@ interface APIResponse {
   data: Thing[];
 }
 
-const ThingList: React.FC = () => {
-  const { data, error } = useSWR<APIResponse>("/api/v1/thing/list", api);
+const ThingList = withRouter(({ router }) => {
+  const { data, error } = useSWR<APIResponse>(
+    `/api/v1/thing/list?namespace=${router.asPath}`,
+    api
+  );
 
   if (!data) {
     // TODO: skeleton
@@ -28,6 +32,6 @@ const ThingList: React.FC = () => {
       ))}
     </>
   );
-};
+});
 
 export default ThingList;

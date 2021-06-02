@@ -16,6 +16,11 @@ const ThingSchema = new Schema<Thing, Model<Thing>>(
       type: Schema.Types.ObjectId,
       ref: "Claim",
     },
+    namespace: {
+      type: String,
+      default: "/",
+      maxlength: [50, "Namespace cannot be more than 50 characters"],
+    },
   },
   {
     timestamps: true,

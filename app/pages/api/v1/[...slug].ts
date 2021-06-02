@@ -90,8 +90,14 @@ const view = async (req: Req, res: Res) => {
 };
 
 const list = async (req: Req, res: Res) => {
+  // pass more queries to filter results
+  // ex: thing/list?title=server-a
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { slug, ...findQuery } = req.query;
+
   const model = getModel(req);
-  const instances = await model.find({});
+  const instances = await model.find(findQuery).exec();
+
   res.status(200).json({ success: true, data: instances });
 };
 
