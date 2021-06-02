@@ -10,10 +10,10 @@ export const userResource = resourceFactory<User>("user", {
 });
 
 // path name is the namespace
-const { pathname } = window.location;
+const namespace = typeof window !== "undefined" && window.location.pathname;
 
 export const thingResource = resourceFactory<Thing, Thing<true>>("thing", {
-  listView: `/api/v1/thing/list?namespace=${pathname}`,
+  listView: `/api/v1/thing/list?namespace=${namespace}`,
 });
 
 export const claimResource = resourceFactory<Claim<true>>("claim");
