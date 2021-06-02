@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { withRouter } from "next/router";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { thingResource } from "resources";
 
@@ -8,7 +8,8 @@ const Wrapper = styled.div<{ isLoading: boolean }>`
     props.isLoading ? `inset rgba(0,0,0,0.3) -1000px -1000px` : `none`};
 `;
 
-const AddThing = withRouter(({ router }) => {
+const AddThing: React.FC = () => {
+  const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -100,6 +101,6 @@ const AddThing = withRouter(({ router }) => {
       </button>
     </Wrapper>
   );
-});
+};
 
 export default AddThing;

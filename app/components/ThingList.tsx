@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { withRouter } from "next/router";
+import { useRouter } from "next/router";
 import { Thing } from "models/types";
 import api from "utils/api";
 import ThingComponent from "./ThingComponent";
@@ -9,7 +9,8 @@ interface APIResponse {
   data: Thing[];
 }
 
-const ThingList = withRouter(({ router }) => {
+const ThingList: React.FC = () => {
+  const router = useRouter();
   const { data, error } = useSWR<APIResponse>(
     `/api/v1/thing/list?namespace=${router.asPath}`,
     api
@@ -32,6 +33,6 @@ const ThingList = withRouter(({ router }) => {
       ))}
     </>
   );
-});
+};
 
 export default ThingList;

@@ -1,14 +1,15 @@
 import React from "react";
-import { withRouter } from "next/router";
+import { useRouter } from "next/router";
 import App from "components/App";
 
-const ContentPage = withRouter(({ router }) => {
+const ContentPage: React.FC = () => {
+  const router = useRouter();
   return (
     <>
-      <p>Page: {router.asPath}</p>
+      <p>Namespace: {router.asPath}</p>
       <App />
     </>
   );
-});
+};
 
 export default ContentPage;
