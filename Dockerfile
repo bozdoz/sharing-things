@@ -15,11 +15,9 @@ ENV MONGODB_URI=${MONGODB_URI}
 RUN npm run build
 
 # add user so we don't run as root
-RUN addgroup -g 1001 -S nodejs \
-  && adduser -S nextjs -u 1001 \
-  && chown -R nextjs:nodejs /app
+RUN chown -R node:node /app
 
-USER nextjs
+USER node
 
 EXPOSE 3000
 

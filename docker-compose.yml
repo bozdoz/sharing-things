@@ -11,7 +11,7 @@ services:
         <<: *env
     restart: always
     ports:
-      - 3000:3000
+      - ${PORT:-3000}:3000
     depends_on:
       - mongo
     environment: 
@@ -22,8 +22,6 @@ services:
     restart: always
     volumes:
       - db:/data/db
-    ports:
-      - 27017:27017
 
 volumes:
   db:
