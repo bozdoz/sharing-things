@@ -5,11 +5,11 @@ import Avatar from "./Avatar";
 const Grid = styled.div`
   display: grid;
   margin: 0 3.2em;
+  align-items: center;
+  grid-template-columns: 1em 1fr;
 
   ${Avatar} {
-    position: absolute;
-    margin-left: -2.6em;
-    margin-top: 0.6em;
+    margin-left: -1em;
   }
 `;
 
@@ -20,18 +20,17 @@ const Grid = styled.div`
 // 4. handles beforeonleave/active state
 // 5.
 const UserName: React.FC = () => {
-  const { name, setName } = useStore();
+  const { name, setName, userId } = useStore();
 
   return (
-    <Grid>
-      <Avatar name={name} />
+    <Grid className="username-container">
+      <Avatar name={userId || ""} />
       <input
         type="text"
         placeholder="Your Name"
         aria-label="Your Name"
         value={name || ""}
         onChange={(e) => setName(e.target.value)}
-        onFocus={(e) => e.target.select()}
         maxLength={50}
       />
     </Grid>

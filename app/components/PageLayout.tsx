@@ -5,7 +5,7 @@ const breakpoint = "600px";
 
 const StyledPage = styled.div`
   display: grid;
-  grid-template-columns: 0 1fr 0;
+  grid-template-columns: 1em 1fr 1em;
 
   > * {
     grid-column: 2 / span 1;
@@ -21,11 +21,11 @@ const StyledPage = styled.div`
   }
 `;
 
-const Page: React.FC = ({ children }) => (
+const PageLayout: React.FC = ({ children }) => (
   <StyledPage>
     <HeaderImage />
     {children}
   </StyledPage>
 );
 
-export default Page;
+export default PageLayout;

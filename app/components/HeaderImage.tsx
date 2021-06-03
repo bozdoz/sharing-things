@@ -3,6 +3,7 @@ import styled from "styled-components";
 const Img = styled.img`
   width: 100%;
   object-fit: contain;
+  object-position: top;
   height: 32vmax;
   max-height: 30vh;
   min-height: 150px;

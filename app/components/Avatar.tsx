@@ -28,7 +28,7 @@ const getBorderRadius = ({ name }: Props): string => {
 };
 
 const Avatar = styled.div<Props>`
-  --size: 2em;
+  --size: 1.6em;
   opacity: ${(props) => (props.name ? 1 : 0)};
   background: ${(props) => colorHash.hex(props.name)};
   width: var(--size);

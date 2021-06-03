@@ -1,4 +1,4 @@
-import Page from "../components/PageLayout";
+import PageLayout from "../components/PageLayout";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import "../styles/globals.scss";
@@ -15,7 +15,7 @@ const SafeHydrate: React.FC = ({ children }) => {
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <SafeHydrate>
-      <Page>
+      <PageLayout>
         <Head>
           <title>Sharing Things</title>
           <link
@@ -24,7 +24,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
           />
         </Head>
         <Component {...pageProps} />
-      </Page>
+      </PageLayout>
     </SafeHydrate>
   );
 };
