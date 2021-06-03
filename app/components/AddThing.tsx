@@ -6,6 +6,14 @@ import { thingResource } from "resources";
 const Wrapper = styled.div<{ isLoading: boolean }>`
   box-shadow: ${(props) =>
     props.isLoading ? `inset rgba(0,0,0,0.3) -1000px -1000px` : `none`};
+
+  display: grid;
+  gap: 0.4em;
+
+  input,
+  textarea {
+    margin-bottom: 0.4em;
+  }
 `;
 
 const AddThing: React.FC = () => {
@@ -79,25 +87,21 @@ const AddThing: React.FC = () => {
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Thing Name"
+        placeholder="Name for Thing"
         onFocus={(e) => e.target.select()}
         required
       />
-      <br />
-
       <textarea
-        placeholder="Message (Optional)"
+        placeholder="Description (Optional)"
         onChange={(e) => setMessage(e.target.value)}
         value={message}
         onFocus={(e) => e.target.select()}
       />
-      <br />
-
+      <button onClick={handleCreate} type="button">
+        Create
+      </button>
       <button onClick={handleToggleForm} type="button">
         Cancel
-      </button>
-      <button className="primary-button" onClick={handleCreate} type="button">
-        Create
       </button>
     </Wrapper>
   );
