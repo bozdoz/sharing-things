@@ -42,6 +42,7 @@ const ThingWrapper = styled.div`
   input[type="text"] {
     width: 100%;
     font-size: 1.2em;
+    font-weight: bold;
     padding: 0.4em;
     margin: -0.4em;
   }
@@ -143,13 +144,6 @@ const ThingComponent: React.FC<Thing> = ({
           claimed by <Avatar name={userId || ""} /> {username}
         </small>
       )}
-      <EditButton
-        type="button"
-        title={editMode ? "Save" : "Edit"}
-        onClick={handleEdit}
-      >
-        {editMode ? "✅" : "✏️"}
-      </EditButton>
       {message && (
         <textarea
           disabled={!editMode}
@@ -158,6 +152,13 @@ const ThingComponent: React.FC<Thing> = ({
           {editMode ? editMessage : message}
         </textarea>
       )}
+      <EditButton
+        type="button"
+        title={editMode ? "Save" : "Edit"}
+        onClick={handleEdit}
+      >
+        {editMode ? "✅" : "✏️"}
+      </EditButton>
       <button onClick={handleClaim} type="button">
         {claimedByCurrentUser ? `Release` : `Claim`}
       </button>
