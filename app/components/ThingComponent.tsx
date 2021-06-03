@@ -141,7 +141,7 @@ const ThingComponent: React.FC<Thing> = ({
       </Title>
       {claim && (
         <small>
-          claimed by <Avatar name={userId || ""} /> {username}
+          claimed by <Avatar name={claim?.user._id || ""} /> {username}
         </small>
       )}
       {message && (
