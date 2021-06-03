@@ -1,7 +1,8 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import useSWR from "swr";
 import { Thing } from "models/types";
 import useStore, { State } from "hooks/useStore";
-import { useEffect } from "react";
-import useSWR from "swr";
 import api from "utils/api";
 
 const userIdSelector = (state: State) => state.userId;
@@ -19,9 +20,13 @@ interface APIResponse {
  * sets user to active/inactive on entry/exit
  */
 const NavigationObserver: React.FC = () => {
+  const router = useRouter();
   const userId = useStore(userIdSelector);
   const beWarned = useStore(warnedSelector);
-  const { data } = useSWR<APIResponse>("/api/v1/thing/list", api);
+  const { data } = useSWR<APIResponse>(
+    `/api/v1/thing/list?namespace=${router.asPath}`,
+    api
+  );
   const userHasClaim = data?.data.some(
     ({ claim }) => claim?.user._id === userId
   );
