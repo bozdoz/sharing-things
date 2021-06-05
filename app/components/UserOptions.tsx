@@ -27,6 +27,7 @@ const Grid = styled.div`
       padding: 0;
       font-size: 1em;
       margin: 0;
+      color: var(--color-scale-light-grey);
     }
 
     .username-container {
@@ -37,7 +38,7 @@ const Grid = styled.div`
     input[type="text"] {
       background: transparent;
       box-shadow: none;
-      color: white;
+      color: var(--color-scale-light-grey);
       margin-bottom: 0;
       padding-left: 0.4em;
       margin-left: -0.2em;
