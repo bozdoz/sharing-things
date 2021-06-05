@@ -5,7 +5,7 @@
 
 import { NextApiRequest as Req, NextApiResponse as Res } from "next";
 import { Model } from "mongoose";
-import dbConnect from "utils/dbConnect";
+import dbConnect from "server-utils/dbConnect";
 import user from "models/User";
 import thing from "models/Thing";
 import claim from "models/Claim";

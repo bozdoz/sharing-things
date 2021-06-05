@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { Thing } from "models/types";
-import api from "utils/api";
+import api from "resources/api";
 import ThingComponent from "./ThingComponent";
 
 interface APIResponse {

@@ -1,5 +1,5 @@
 import { mutate } from "swr";
-import api from "utils/api";
+import api from "resources/api";
 import { BaseModel } from "models/types";
 
 interface ApiResponse<T> {
