@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Thing } from "models/types";
 import useStore, { State } from "hooks/useStore";
-import api from "utils/api";
+import api from "resources/api";
+import useSocket from "hooks/useSocket";
 
 const userIdSelector = (state: State) => state.userId;
 const warnedSelector = (state: State) => state.beWarned;
@@ -20,6 +21,7 @@ interface APIResponse {
  * sets user to active/inactive on entry/exit
  */
 const NavigationObserver: React.FC = () => {
+  const socket = useSocket();
   const router = useRouter();
   const userId = useStore(userIdSelector);
   const beWarned = useStore(warnedSelector);
@@ -38,9 +40,6 @@ const NavigationObserver: React.FC = () => {
         e.returnValue =
           "You have active claims; are you sure you want to leave?";
       }
-
-      // TODO no matter what, set user to inactive
-      // This might need to be handled in websockets
     };
 
     window.addEventListener("beforeunload", userExitsPage);
@@ -50,6 +49,23 @@ const NavigationObserver: React.FC = () => {
     };
   }, [userId, beWarned, userHasClaim]);
 
+  useEffect(() => {
+    if (socket && userId) {
+      // set user to active on load
+      const onConnect = () => {
+        console.log("client connect");
+        // send userId to server for updating db
+        socket.emit("set active user", userId);
+      };
+      socket.on("connect", onConnect);
+
+      return () => {
+        socket.off("connect", onConnect);
+      };
+    }
+  }, [socket, userId]);
+
+  // observers don't render anything
   return null;
 };
 
