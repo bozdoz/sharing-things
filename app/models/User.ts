@@ -8,15 +8,13 @@ const UserSchema = new Schema<User, Model<User>>(
       required: [true, "Please provide a name."],
       maxlength: [50, "Name cannot be more than 50 characters"],
     },
-    active: {
-      type: Boolean,
-      default: true,
-    },
   },
   {
     timestamps: true,
   }
 );
+
+// TODO define pre 'remove' hooks
 
 const getModel = () => model("User", UserSchema);
 
