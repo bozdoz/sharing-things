@@ -7,12 +7,6 @@ export interface BaseModel {
 
 export interface User extends BaseModel {
   name: string;
-  /**
-   * whether user is on the page or not (default: true)
-   * sets to false when user navigates away
-   * sets to true when user revisits
-   */
-  active?: boolean;
 }
 
 export interface Thing<Updating = false> extends BaseModel {
