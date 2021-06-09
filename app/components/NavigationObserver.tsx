@@ -17,16 +17,16 @@ interface APIResponse {
 /**
  * Watches for navigation
  *
- * warns if user navigates away with an active claim
+ * warns if user navigates away with an active claim (TODO: buggy)
  * sets user to active/inactive on entry/exit
  */
 const NavigationObserver: React.FC = () => {
   const socket = useSocket();
-  const router = useRouter();
+  const { asPath: namespace } = useRouter();
   const userId = useStore(userIdSelector);
   const beWarned = useStore(warnedSelector);
   const { data } = useSWR<APIResponse>(
-    `/api/v1/thing/list?namespace=${router.asPath}`,
+    `/api/v1/thing/list?namespace=${namespace}`,
     api
   );
   const userHasClaim = data?.data.some(
@@ -51,19 +51,13 @@ const NavigationObserver: React.FC = () => {
 
   useEffect(() => {
     if (socket && userId) {
-      // set user to active on load
-      const onConnect = () => {
-        console.log("client connect");
-        // send userId to server for updating db
-        socket.emit("set active user", userId);
-      };
-      socket.on("connect", onConnect);
-
-      return () => {
-        socket.off("connect", onConnect);
-      };
+      // send userId to server
+      socket.emit("set active user", {
+        userId,
+        namespace,
+      });
     }
-  }, [socket, userId]);
+  }, [socket, userId, namespace]);
 
   // observers don't render anything
   return null;
