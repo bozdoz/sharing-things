@@ -103,7 +103,13 @@ textarea {
     border: 1px solid transparent;
     outline: 0;
     box-shadow: none;
-    color: var(--color-fg-primary);
+
+    &,
+    &:disabled {
+      // safari overrides disabled styles
+      color: var(--color-fg-primary);
+      cursor: text;
+    }
 
     &:not(:disabled) {
       &:hover,

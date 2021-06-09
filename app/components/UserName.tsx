@@ -13,12 +13,6 @@ const Grid = styled.div`
   }
 `;
 
-// workflow:
-// // 1. has name
-// 2. creates server
-// 3. claims server
-// 4. handles beforeonleave/active state
-// 5.
 const UserName: React.FC = () => {
   const { name, setName, userId } = useStore();
 

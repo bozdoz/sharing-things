@@ -10,7 +10,7 @@ const Wrapper = styled.div<{ disabled: boolean }>`
 
 const nameEmptySelector = (state: State) => !state.name;
 
-const Usage: React.FC = () => {
+const ThingSection: React.FC = () => {
   const isNameEmpty = useStore(nameEmptySelector);
 
   return (
@@ -24,4 +24,4 @@ const Usage: React.FC = () => {
   );
 };
 
-export default Usage;
+export default ThingSection;
