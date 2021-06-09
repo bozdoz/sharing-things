@@ -1,9 +1,12 @@
 import useStore, { State } from "hooks/useStore";
 import { Thing } from "models/types";
 import { useCallback, useState } from "react";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { claimResource, thingResource } from "resources";
 import Avatar from "./Avatar";
+import ConfirmButton from "./ConfirmButton";
+import useSocket from "hooks/useSocket";
 
 const EditButton = styled.button`
   box-sizing: border-box;
@@ -64,50 +67,64 @@ const Title = styled.div`
   }
 `;
 
-const userIdSelector = (state: State) => state.userId;
+const userIdSelector = (state: State): string | null => state.userId;
+
+const claimThing = async (thing: string, userId: string) => {
+  const { _id: claim } = await claimResource.create({
+    thing,
+    user: userId,
+  });
+
+  await thingResource.update(thing, {
+    claim,
+  });
+};
 
 const ThingComponent: React.FC<Thing> = ({
   _id: thing,
   title,
   message,
-  claim,
+  claim: activeClaim,
 }) => {
   const userId = useStore(userIdSelector);
-  const [deletePending, setDeletePending] = useState(false);
-  const claimedByCurrentUser = claim?.user._id === userId;
+  const claimedByCurrentUser = activeClaim?.user._id === userId;
   const [editMode, setEditMode] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editMessage, setEditMessage] = useState(message);
+  const socket = useSocket();
+  const { asPath: namespace } = useRouter();
 
-  const handleClaim = useCallback(async () => {
+  const handleReleaseOrClaim = useCallback(() => {
     if (claimedByCurrentUser) {
       // release
-      await thingResource.update(thing, {
+      thingResource.update(thing, {
         claim: null,
       });
     } else if (userId) {
-      const { _id: claim } = await claimResource.create({
-        thing,
-        user: userId,
-      });
-
-      await thingResource.update(thing, {
-        claim,
-      });
+      claimThing(thing, userId);
     }
   }, [userId, thing, claimedByCurrentUser]);
 
-  const handleDelete = useCallback(async () => {
-    if (deletePending) {
-      await thingResource.delete(thing);
-    } else {
-      setDeletePending(true);
+  const handleSteal = useCallback(() => {
+    if (userId) {
+      // send both userIds to websocket
+      // to alert current holder
+      if (socket && activeClaim) {
+        console.log("stealing");
+        socket.emit("steal a thing", {
+          namespace,
+          victimId: activeClaim.user._id,
+          thingId: thing,
+        });
+      }
 
-      window.setTimeout(() => {
-        setDeletePending(false);
-      }, 3000);
+      claimThing(thing, userId);
     }
-  }, [deletePending, thing]);
+  }, [thing, userId, socket, activeClaim, namespace]);
+
+  const handleDelete = useCallback(() => {
+    thingResource.delete(thing);
+  }, [thing]);
 
   const handleEdit = useCallback(() => {
     if (editMode) {
@@ -120,7 +137,7 @@ const ThingComponent: React.FC<Thing> = ({
     setEditMode(!editMode);
   }, [editMessage, editMode, editTitle, thing]);
 
-  const username = claim?.user.name || "";
+  const username = activeClaim?.user.name || "";
 
   const classNames = ["thing-component", editMode && "edit-mode"]
     .filter(Boolean)
@@ -136,21 +153,23 @@ const ThingComponent: React.FC<Thing> = ({
           onChange={(e) => setEditTitle(e.target.value)}
           value={titleValue}
           disabled={!editMode}
+          placeholder="Name for Thing"
           maxLength={50}
-        />{" "}
+          required
+        />
       </Title>
-      {claim && (
+      {activeClaim && (
         <small>
-          claimed by <Avatar name={claim?.user._id || ""} /> {username}
+          claimed by <Avatar name={activeClaim?.user._id || ""} /> {username}
         </small>
       )}
-      {message && (
+      {(message || editMode) && (
         <textarea
           disabled={!editMode}
           onChange={(e) => setEditMessage(e.target.value)}
-        >
-          {editMode ? editMessage : message}
-        </textarea>
+          placeholder="Description (Optional)"
+          value={editMode ? editMessage : message}
+        />
       )}
       <EditButton
         type="button"
@@ -159,13 +178,26 @@ const ThingComponent: React.FC<Thing> = ({
       >
         {editMode ? "✅" : "✏️"}
       </EditButton>
-      <button onClick={handleClaim} type="button">
-        {claimedByCurrentUser ? `Release` : `Claim`}
-      </button>
-      {editMode && (
-        <button onClick={handleDelete} type="button" className="danger-button">
-          {deletePending ? "Click again to delete" : "Delete"}
+      {!claimedByCurrentUser && activeClaim ? (
+        <ConfirmButton
+          onConfirm={handleSteal}
+          pendingMessage="Click again to steal"
+        >
+          Steal
+        </ConfirmButton>
+      ) : (
+        <button onClick={handleReleaseOrClaim} type="button">
+          {claimedByCurrentUser ? `Release` : `Claim`}
         </button>
+      )}
+      {editMode && !activeClaim && (
+        <ConfirmButton
+          onConfirm={handleDelete}
+          pendingMessage="Click again to delete"
+          className="danger-button"
+        >
+          Delete
+        </ConfirmButton>
       )}
     </ThingWrapper>
   );
