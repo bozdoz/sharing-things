@@ -1,23 +1,21 @@
-import useSocket from "hooks/useSocket";
+import socket from "websocket/client-socket";
 import { useEffect } from "react";
+import { thingResource } from "resources";
 
 const ThingObserver: React.FC = () => {
-  const socket = useSocket();
-
   useEffect(() => {
-    if (socket) {
-      const cb = (thingId: string) => {
-        // TODO: do better
-        alert(`Your thing was stolen: ${thingId}`);
-      };
+    const cb = async (thingId: string) => {
+      const { title, claimedBy } = await thingResource.get(thingId);
+      // TODO: do better
+      alert(`Your thing (${title}) was stolen by ${claimedBy?.name}`);
+    };
 
-      socket.on("thing stolen", cb);
+    socket.on("thing stolen", cb);
 
-      return () => {
-        socket.off("thing stolen", cb);
-      };
-    }
-  }, [socket]);
+    return () => {
+      socket.off("thing stolen", cb);
+    };
+  }, []);
 
   return null;
 };

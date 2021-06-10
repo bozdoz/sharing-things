@@ -1,7 +1,7 @@
 import { Schema, model, models, Model } from "mongoose";
 import { Thing } from "./types";
 
-const ThingSchema = new Schema<Thing, Model<Thing>>(
+const ThingSchema = new Schema<Thing<true>, Model<Thing<true>>, Thing>(
   {
     title: {
       type: String,
@@ -12,7 +12,7 @@ const ThingSchema = new Schema<Thing, Model<Thing>>(
       type: String,
       maxlength: [500, "Message cannot be more than 500 characters"],
     },
-    claim: {
+    claimed: {
       type: Schema.Types.ObjectId,
       ref: "Claim",
     },
@@ -21,6 +21,10 @@ const ThingSchema = new Schema<Thing, Model<Thing>>(
       default: "/",
       maxlength: [50, "Namespace cannot be more than 50 characters"],
     },
+    claimedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
@@ -28,9 +32,16 @@ const ThingSchema = new Schema<Thing, Model<Thing>>(
 );
 
 ThingSchema.pre("find", function () {
-  // return related claim, instead of id
-  this.populate("claim");
+  // return related fields, instead of just id's
+  this.populate("claimed", "createdAt").populate("claimedBy");
 });
+
+ThingSchema.pre("findOne", function () {
+  // return related fields, instead of just id's
+  this.populate("claimed", "createdAt").populate("claimedBy");
+});
+
+// TODO define pre 'remove' hooks
 
 const getModel = () => model("Thing", ThingSchema);
 

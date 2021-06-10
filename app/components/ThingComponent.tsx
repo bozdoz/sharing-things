@@ -1,12 +1,11 @@
 import useStore, { State } from "hooks/useStore";
 import { Thing } from "models/types";
-import { useCallback, useState } from "react";
-import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { claimResource, thingResource } from "resources";
 import Avatar from "./Avatar";
 import ConfirmButton from "./ConfirmButton";
-import useSocket from "hooks/useSocket";
+import socket from "websocket/client-socket";
 
 const EditButton = styled.button`
   box-sizing: border-box;
@@ -76,7 +75,8 @@ const claimThing = async (thing: string, userId: string) => {
   });
 
   await thingResource.update(thing, {
-    claim,
+    claimed: claim,
+    claimedBy: userId,
   });
 };
 
@@ -84,21 +84,32 @@ const ThingComponent: React.FC<Thing> = ({
   _id: thing,
   title,
   message,
-  claim: activeClaim,
+  claimedBy,
 }) => {
   const userId = useStore(userIdSelector);
-  const claimedByCurrentUser = activeClaim?.user._id === userId;
+  const claimedByCurrentUser = claimedBy?._id === userId;
   const [editMode, setEditMode] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editMessage, setEditMessage] = useState(message);
-  const socket = useSocket();
-  const { asPath: namespace } = useRouter();
+
+  // if the resource is invalidated, title or message may have changed
+  // need to update the editable title/message
+  useEffect(() => {
+    // don't update title/message if in the middle of editing
+    // TODO: user should be notified
+    // TODO: add cancel button
+    if (!editMode) {
+      setEditTitle(title);
+      setEditMessage(message);
+    }
+  }, [title, message, editMode]);
 
   const handleReleaseOrClaim = useCallback(() => {
     if (claimedByCurrentUser) {
       // release
       thingResource.update(thing, {
-        claim: null,
+        claimed: null,
+        claimedBy: null,
       });
     } else if (userId) {
       claimThing(thing, userId);
@@ -109,18 +120,17 @@ const ThingComponent: React.FC<Thing> = ({
     if (userId) {
       // send both userIds to websocket
       // to alert current holder
-      if (socket && activeClaim) {
+      if (claimedBy) {
         console.log("stealing");
         socket.emit("steal a thing", {
-          namespace,
-          victimId: activeClaim.user._id,
+          victimId: claimedBy._id,
           thingId: thing,
         });
       }
 
       claimThing(thing, userId);
     }
-  }, [thing, userId, socket, activeClaim, namespace]);
+  }, [userId, claimedBy, thing]);
 
   const handleDelete = useCallback(() => {
     thingResource.delete(thing);
@@ -137,7 +147,7 @@ const ThingComponent: React.FC<Thing> = ({
     setEditMode(!editMode);
   }, [editMessage, editMode, editTitle, thing]);
 
-  const username = activeClaim?.user.name || "";
+  const username = claimedBy?.name || "";
 
   const classNames = ["thing-component", editMode && "edit-mode"]
     .filter(Boolean)
@@ -158,9 +168,9 @@ const ThingComponent: React.FC<Thing> = ({
           required
         />
       </Title>
-      {activeClaim && (
+      {claimedBy && (
         <small>
-          claimed by <Avatar name={activeClaim?.user._id || ""} /> {username}
+          claimed by <Avatar name={claimedBy?._id || ""} /> {username}
         </small>
       )}
       {(message || editMode) && (
@@ -178,7 +188,7 @@ const ThingComponent: React.FC<Thing> = ({
       >
         {editMode ? "✅" : "✏️"}
       </EditButton>
-      {!claimedByCurrentUser && activeClaim ? (
+      {!claimedByCurrentUser && claimedBy ? (
         <ConfirmButton
           onConfirm={handleSteal}
           pendingMessage="Click again to steal"
@@ -190,7 +200,7 @@ const ThingComponent: React.FC<Thing> = ({
           {claimedByCurrentUser ? `Release` : `Claim`}
         </button>
       )}
-      {editMode && !activeClaim && (
+      {editMode && !claimedBy && (
         <ConfirmButton
           onConfirm={handleDelete}
           pendingMessage="Click again to delete"

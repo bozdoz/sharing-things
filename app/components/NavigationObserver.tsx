@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { Thing } from "models/types";
 import useStore, { State } from "hooks/useStore";
 import api from "resources/api";
-import useSocket from "hooks/useSocket";
+import socket from "websocket/client-socket";
 
 const userIdSelector = (state: State) => state.userId;
 const warnedSelector = (state: State) => state.beWarned;
@@ -21,8 +21,7 @@ interface APIResponse {
  * sets user to active/inactive on entry/exit
  */
 const NavigationObserver: React.FC = () => {
-  const socket = useSocket();
-  const { asPath: namespace } = useRouter();
+  const { asPath: namespace, isReady } = useRouter();
   const userId = useStore(userIdSelector);
   const beWarned = useStore(warnedSelector);
   const { data } = useSWR<APIResponse>(
@@ -30,7 +29,7 @@ const NavigationObserver: React.FC = () => {
     api
   );
   const userHasClaim = data?.data.some(
-    ({ claim }) => claim?.user._id === userId
+    ({ claimedBy }) => claimedBy?._id === userId
   );
 
   useEffect(() => {
@@ -50,14 +49,16 @@ const NavigationObserver: React.FC = () => {
   }, [userId, beWarned, userHasClaim]);
 
   useEffect(() => {
-    if (socket && userId) {
+    // without isReady, namespace initializes as the '[...slug]'
+    // catch-all from the pages directory
+    if (userId && isReady) {
       // send userId to server
       socket.emit("set active user", {
         userId,
         namespace,
       });
     }
-  }, [socket, userId, namespace]);
+  }, [userId, namespace, isReady]);
 
   // observers don't render anything
   return null;

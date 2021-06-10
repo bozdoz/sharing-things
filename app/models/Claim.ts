@@ -1,4 +1,4 @@
-import { Schema, model, models, Model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 import { Claim } from "./types";
 
 const ClaimSchema = new Schema<Claim>(
@@ -20,10 +20,7 @@ const ClaimSchema = new Schema<Claim>(
   }
 );
 
-ClaimSchema.pre("find", function () {
-  // return related user, instead of id
-  this.populate("user");
-});
+// TODO: define pre 'remove' hooks
 
 const getModel = () => model("Claim", ClaimSchema);
 

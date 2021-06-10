@@ -13,12 +13,15 @@ export interface Thing<Updating = false> extends BaseModel {
   title: string;
   message?: string;
   /** current claim */
-  claim?: null | (Updating extends true ? string : Claim);
+  claimed?:
+    | null
+    | (Updating extends true ? string : Pick<Claim, "_id" | "createdAt">);
   /**
    * use routes to share things in multiple namespaces:
    * URL /path/is/your/namespace
    */
   namespace: string;
+  claimedBy?: null | (Updating extends true ? string : User);
 }
 
 /** record of claims */

@@ -1,4 +1,4 @@
-import useSocket from "hooks/useSocket";
+import socket from "websocket/client-socket";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -20,21 +20,18 @@ const Grid = styled.div`
 
 const AppStatus: React.FC = () => {
   const [activeUsers, setActiveUsers] = useState(0);
-  const socket = useSocket();
 
   useEffect(() => {
-    if (socket) {
-      // get active users
-      const cb = (count: number) => {
-        setActiveUsers(count);
-      };
-      socket.on("active users", cb);
+    // get active users
+    const cb = (count: number) => {
+      setActiveUsers(count);
+    };
+    socket.on("active users", cb);
 
-      return () => {
-        socket.off("active users", cb);
-      };
-    }
-  }, [socket]);
+    return () => {
+      socket.off("active users", cb);
+    };
+  }, []);
 
   const { asPath: namespace } = useRouter();
 
