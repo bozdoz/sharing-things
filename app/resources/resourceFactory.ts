@@ -11,9 +11,11 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
   model: string,
   {
     postUpdate,
+    postCreate,
     listView = "",
   }: {
     postUpdate?: (body: T) => void;
+    postCreate?: (body: T) => void;
     /** custom listView to purge from cache */
     listView?: string;
   } = {}
@@ -40,14 +42,22 @@ const resourceFactory = <T extends BaseModel, U extends BaseModel = T>(
     return instance;
   };
 
-  const create = (body: Writable<T>) => request(`/create`, body);
+  const create = async (body: Writable<T>) => {
+    const instance = await request(`/create`, body);
+    postCreate?.(instance);
+
+    return instance;
+  };
 
   const deleteFn = (id: string) => request(`/${id}/delete`);
+
+  const get = (id: string) => request(`/${id}`);
 
   return {
     create,
     update,
     delete: deleteFn,
+    get,
   };
 };
 
