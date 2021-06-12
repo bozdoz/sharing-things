@@ -6,6 +6,7 @@ const ThingObserver: React.FC = () => {
   useEffect(() => {
     const cb = async (thingId: string) => {
       const { title, claimedBy } = await thingResource.get(thingId);
+      console.log("thing stolen callback");
       // TODO: do better
       alert(`Your thing (${title}) was stolen by ${claimedBy?.name}`);
     };
