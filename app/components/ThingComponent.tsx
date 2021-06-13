@@ -1,90 +1,22 @@
-import useStore, { State } from "hooks/useStore";
+import useStore from "hooks/useStore";
 import { Thing } from "models/types";
 import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
-import { claimResource, thingResource } from "resources";
-import Avatar from "./Avatar";
+import { thingResource } from "resources";
+import ThingClaimedBy from "./ThingClaimedBy";
 import ConfirmButton from "./ConfirmButton";
 import socket from "websocket/client-socket";
-
-const EditButton = styled.button`
-  box-sizing: border-box;
-  width: 1.8em;
-  height: 1.8em;
-  position: absolute;
-  right: 0.6em;
-  top: 0.6em;
-  padding: 0;
-  margin: 0;
-  font-size: 1em;
-  background: transparent;
-`;
-
-const ThingWrapper = styled.div`
-  position: relative;
-  background: rgba(12, 49, 73, 0.4);
-  margin: 0.5em 0 2em;
-  padding: 1em;
-  border-radius: var(--border-radius);
-  display: grid;
-  gap: 0.4em;
-  line-height: 1;
-
-  > *:not(button) {
-    margin-bottom: 0.2em;
-  }
-
-  ${Avatar} {
-    --size: 16px;
-    --delay: 0;
-    margin-left: 5px;
-    margin-bottom: -2px;
-  }
-
-  input[type="text"] {
-    width: 100%;
-    font-size: 1.2em;
-    font-weight: bold;
-    padding: 0.4em;
-    margin: -0.4em;
-  }
-
-  textarea {
-    resize: none;
-    padding: 0;
-  }
-
-  &.edit-mode textarea {
-    resize: initial;
-  }
-`;
-
-const Title = styled.div`
-  small {
-    font-weight: normal;
-    margin-left: 0.4em;
-  }
-`;
-
-const userIdSelector = (state: State): string | null => state.userId;
-
-const claimThing = async (thing: string, userId: string) => {
-  const { _id: claim } = await claimResource.create({
-    thing,
-    user: userId,
-  });
-
-  await thingResource.update(thing, {
-    claimed: claim,
-    claimedBy: userId,
-  });
-};
+import StyledEditButton from "./styled/StyledEditButton";
+import StyledThingWrapper from "./styled/StyledThingWrapper";
+import StyledThingTitle from "./styled/StyledThingTitle";
+import { userIdSelector } from "selectors/selectors";
+import claimThing from "resources/claimThing";
 
 const ThingComponent: React.FC<Thing> = ({
   _id: thing,
   title,
   message,
   claimedBy,
+  claimed,
 }) => {
   const userId = useStore(userIdSelector);
   const claimedByCurrentUser = claimedBy?._id === userId;
@@ -121,7 +53,6 @@ const ThingComponent: React.FC<Thing> = ({
       // send both userIds to websocket
       // to alert current holder
       if (claimedBy) {
-        console.log("stealing");
         socket.emit("steal a thing", {
           victimId: claimedBy._id,
           thingId: thing,
@@ -147,8 +78,6 @@ const ThingComponent: React.FC<Thing> = ({
     setEditMode(!editMode);
   }, [editMessage, editMode, editTitle, thing]);
 
-  const username = claimedBy?.name || "";
-
   const classNames = ["thing-component", editMode && "edit-mode"]
     .filter(Boolean)
     .join(" ");
@@ -156,8 +85,8 @@ const ThingComponent: React.FC<Thing> = ({
   const titleValue = editMode ? editTitle : title;
 
   return (
-    <ThingWrapper className={classNames}>
-      <Title>
+    <StyledThingWrapper className={classNames}>
+      <StyledThingTitle>
         <input
           type="text"
           onChange={(e) => setEditTitle(e.target.value)}
@@ -167,12 +96,8 @@ const ThingComponent: React.FC<Thing> = ({
           maxLength={50}
           required
         />
-      </Title>
-      {claimedBy && (
-        <small>
-          claimed by <Avatar name={claimedBy?._id || ""} /> {username}
-        </small>
-      )}
+      </StyledThingTitle>
+      <ThingClaimedBy claimedBy={claimedBy} dateClaimed={claimed?.createdAt} />
       {(message || editMode) && (
         <textarea
           disabled={!editMode}
@@ -181,13 +106,13 @@ const ThingComponent: React.FC<Thing> = ({
           value={editMode ? editMessage : message}
         />
       )}
-      <EditButton
+      <StyledEditButton
         type="button"
         title={editMode ? "Save" : "Edit"}
         onClick={handleEdit}
       >
         {editMode ? "✅" : "✏️"}
-      </EditButton>
+      </StyledEditButton>
       {!claimedByCurrentUser && claimedBy ? (
         <ConfirmButton
           onConfirm={handleSteal}
@@ -209,7 +134,7 @@ const ThingComponent: React.FC<Thing> = ({
           Delete
         </ConfirmButton>
       )}
-    </ThingWrapper>
+    </StyledThingWrapper>
   );
 };
 
