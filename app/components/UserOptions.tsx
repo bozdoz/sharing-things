@@ -1,4 +1,9 @@
-import useStore, { State } from "hooks/useStore";
+import useStore from "hooks/useStore";
+import {
+  beWarnedSelector,
+  setBeWarnedSelector,
+  userIdSelector,
+} from "selectors/selectors";
 import styled from "styled-components";
 import UserName from "./UserName";
 
@@ -49,10 +54,6 @@ const Grid = styled.div`
     }
   }
 `;
-
-const userIdSelector = (state: State) => state.userId;
-const beWarnedSelector = (state: State) => state.beWarned;
-const setBeWarnedSelector = (state: State) => state.setBeWarned;
 
 const UserOptions: React.FC = () => {
   const userId = useStore(userIdSelector);

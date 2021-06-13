@@ -2,12 +2,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Thing } from "models/types";
-import useStore, { State } from "hooks/useStore";
+import useStore from "hooks/useStore";
 import api from "resources/api";
 import socket from "websocket/client-socket";
-
-const userIdSelector = (state: State) => state.userId;
-const warnedSelector = (state: State) => state.beWarned;
+import { userIdSelector, beWarnedSelector } from "selectors/selectors";
 
 interface APIResponse {
   success: boolean;
@@ -23,7 +21,7 @@ interface APIResponse {
 const NavigationObserver: React.FC = () => {
   const { asPath: namespace, isReady } = useRouter();
   const userId = useStore(userIdSelector);
-  const beWarned = useStore(warnedSelector);
+  const beWarned = useStore(beWarnedSelector);
   const { data } = useSWR<APIResponse>(
     `/api/v1/thing/list?namespace=${namespace}`,
     api

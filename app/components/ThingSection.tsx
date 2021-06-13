@@ -1,4 +1,5 @@
-import useStore, { State } from "hooks/useStore";
+import useStore from "hooks/useStore";
+import { nameEmptySelector } from "selectors/selectors";
 import styled from "styled-components";
 import AddThing from "./AddThing";
 import ThingList from "./ThingList";
@@ -7,8 +8,6 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   opacity: ${(props) => (props.disabled ? 0.2 : 1)};
   transition: opacity var(--anim) var(--delay);
 `;
-
-const nameEmptySelector = (state: State) => !state.name;
 
 const ThingSection: React.FC = () => {
   const isNameEmpty = useStore(nameEmptySelector);
