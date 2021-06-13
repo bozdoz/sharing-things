@@ -10,7 +10,6 @@ export interface State {
   beWarned: boolean;
   setBeWarned(beWarned: boolean): void;
   userId: string | null;
-  setUserId(userId: string): void;
 }
 
 // need to pass the state setter to the debounced function
@@ -20,6 +19,7 @@ const debouncedCreateUser = debounce(
   async (set: SetState<State>, user: Writable<User>) => {
     const { _id: userId } = await userResource.create(user);
 
+    // only sets userId after user created; otherwise, it's in localstorage
     set({ userId });
   }
 );
@@ -47,7 +47,6 @@ const useStore = create<State>(
       beWarned: true,
       setBeWarned: (beWarned: boolean) => set(() => ({ beWarned })),
       userId: null,
-      setUserId: (userId: string) => set(() => ({ userId })),
     }),
     {
       name: "app-storage",
