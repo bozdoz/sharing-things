@@ -40,9 +40,9 @@ const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
         );
       };
 
-      /** refresh Thing queries for a given namespace */
-      const refreshThings = (namespace: string[]) => {
-        io.to(namespace).emit("refresh things");
+      /** refresh Thing queries for a given room */
+      const refreshThings = (room: string[]) => {
+        io.to(room).emit("refresh things");
       };
 
       socket.on(
@@ -52,8 +52,8 @@ const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
           socket.data.userId = userId;
 
           // make user join its own room
-          // TODO: make userId identical to socket.id
           socket.join(userId);
+          // make user join the namespace (misnomer for room)
           socket.join(namespace);
 
           // increment connection count for user
@@ -86,7 +86,6 @@ const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
       socket.on(
         "steal a thing",
         ({ victimId, thingId }: { victimId: string; thingId: string }) => {
-          console.log("steal a thing triggered");
           socket.to(victimId).emit("thing stolen", thingId);
         }
       );
@@ -104,12 +103,12 @@ const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
             "namespace"
           ).exec();
 
-          const namespaces = Array.from(
+          const rooms = Array.from(
             new Set(claimedThings.map(({ namespace }) => namespace))
           );
 
-          if (namespaces.length) {
-            refreshThings(namespaces);
+          if (rooms.length) {
+            refreshThings(rooms);
           }
         } catch (e) {
           console.error("failed to invalidate claimed things");
@@ -122,11 +121,11 @@ const socketIo = (_req: NextApiRequest, res: CustomResponse) => {
           // check if user has any claims
           await dbConnect();
 
-          const { namespace = "" } =
+          const { namespace: room = "" } =
             (await Thing.findById(thingId, "namespace").exec()) || {};
 
-          if (namespace) {
-            refreshThings([namespace]);
+          if (room) {
+            refreshThings([room]);
           }
         } catch (e) {
           console.error("failed to invalidate updated things");
