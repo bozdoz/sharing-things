@@ -163,3 +163,14 @@ fieldset {
   margin: 0;
   margin-left: 1.6em;
 }
+
+#header-image {
+  height: 32vmax;
+  max-height: 30vh;
+  min-height: 150px;
+  width: 100%;
+  background: url(/sharing-things.png), url(/sharing-things-blurred.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+}

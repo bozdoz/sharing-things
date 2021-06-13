@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import HeaderImage from "./HeaderImage";
 
 const breakpoint = "600px";
 
@@ -23,7 +22,7 @@ const StyledPage = styled.div`
 
 const PageLayout: React.FC = ({ children }) => (
   <StyledPage>
-    <HeaderImage />
+    <div id="header-image" aria-label="Sharing Things" />
     {children}
   </StyledPage>
 );
