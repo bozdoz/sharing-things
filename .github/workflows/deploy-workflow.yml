@@ -1,0 +1,13 @@
+name: DeployWorkflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    container: bozdoz/fabric-deployment
+    runs-on: ubuntu-latest
+    steps:
+      - run: fab gitpull dockercomposebuild
