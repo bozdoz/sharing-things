@@ -7,7 +7,14 @@ on:
 
 jobs:
   deploy:
-    container: bozdoz/fabric-deployment
+    container: 
+      image: bozdoz/fabric-deployment
+      env:
+        CWD: ${{ secrets.CWD }}
+        HOST: ${{ secrets.HOST }}
+        PORT: ${{ secrets.PORT }}
+        USER: ${{ secrets.USER }}
+        PASSWORD: ${{ secrets.PASSWORD }}
     runs-on: ubuntu-latest
     steps:
       - run: fab gitpull dockercomposebuild
